@@ -1,0 +1,19 @@
+# Makefile.maskdyn
+PG_CONFIG = /opt/db-postgresql/pgsql-15/bin/pg_config
+PG_INC := $(shell $(PG_CONFIG) --includedir-server)
+VOLTAGE_INC = /opt/voltage/simpleapi/include
+VOLTAGE_LIB = /opt/voltage/simpleapi/lib
+SOURCE = voltage_udf_maskdyn.c
+TARGET = voltage_udf_maskdyn.so
+OPTIMIZATION_FLAGS = -O3 -march=native -Wall
+LINKER_FLAGS = -fPIC -shared -I$(PG_INC) -I$(VOLTAGE_INC) -L$(VOLTAGE_LIB) -lvibesimpledyn -ldl -lpthread
+CFLAGS = $(OPTIMIZATION_FLAGS) $(LINKER_FLAGS)
+
+all: $(TARGET)
+$(TARGET): $(SOURCE)
+	gcc $(CFLAGS) -o $(TARGET) $(SOURCE)
+clean:
+	rm -f $(TARGET)
+install: all
+	install -c -m 755 $(TARGET) $(shell $(PG_CONFIG) --pkglibdir)
+.PHONY: all clean install

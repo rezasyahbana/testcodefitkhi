@@ -1,0 +1,9 @@
+# Untuk compile
+make -f Makefile.raw
+make -f Makefile.shield
+make -f Makefile.maskdyn
+
+# Untuk copy ke folder lib postgresql
+make -f Makefile.raw install
+make -f Makefile.shield install
+make -f Makefile.maskdyn install
